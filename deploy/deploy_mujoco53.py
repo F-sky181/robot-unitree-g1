@@ -93,7 +93,7 @@ class ArmConfig:
     @classmethod
     def from_yaml(cls, config_path: str) -> 'ArmConfig':
         """从YAML配置文件加载配置"""
-        with open(config_path, "r") as f:
+        with open(config_path, "r", encoding='utf-8') as f:
             config = yaml.load(f, Loader=yaml.FullLoader)
 
         instance = cls()
@@ -1518,8 +1518,8 @@ class SquatController:
         dqj = np.zeros(self.n_joints, dtype=np.float32)
 
         for i, key in enumerate(self.joint_names):
-            qj[i] = self.data.joint(key).qpos
-            dqj[i] = self.data.joint(key).qvel
+            qj[i] = self.data.joint(key).qpos[0]
+            dqj[i] = self.data.joint(key).qvel[0]
 
         # 获取姿态信息
         quat = self.data.qpos[3:7].copy()
@@ -1632,8 +1632,8 @@ class SquatController:
 
         foot_names = self.joint_names[:12]
         for i, key in enumerate(foot_names):
-            current_pos[i] = self.data.joint(key).qpos
-            current_vel[i] = self.data.joint(key).qvel
+            current_pos[i] = self.data.joint(key).qpos[0]
+            current_vel[i] = self.data.joint(key).qvel[0]
 
         # 获取PD控制增益
         leg_kp = self.config.kps[:12] if len(self.config.kps) >= 12 else np.ones(12) * 100
@@ -1929,7 +1929,7 @@ def main():
     print(f"  Y轴: {config.workspace_limits['y']}")
     print(f"  Z轴: {config.workspace_limits['z']}")
 
-    with open(config_path, "r") as f:
+    with open(config_path, "r", encoding='utf-8') as f:
         yaml_config = yaml.load(f, Loader=yaml.FullLoader)
         xml_path = yaml_config["xml_path"].replace("{LEGGED_GYM_ROOT_DIR}", dir_root)
 
@@ -2021,8 +2021,8 @@ def main():
                     elif i in waist_indices:  # 腰部关节 (12-14)
                         # 对腰部关节应用简单的PD控制，保持在默认位置
                         joint_name = waist_joint_names[i - 12]  # 获取对应的关节名称
-                        current_pos = data.joint(joint_name).qpos
-                        current_vel = data.joint(joint_name).qvel
+                        current_pos = data.joint(joint_name).qpos[0]
+                        current_vel = data.joint(joint_name).qvel[0]
 
                         # 从配置文件获取目标位置
                         target_pos = config.default_angles[i] if i < len(config.default_angles) else 0.0
