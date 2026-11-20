@@ -1,5 +1,22 @@
 # 宇树科技 G1 机器人控制学习研究
 
+> **⚠️ 二次开发说明 (Forked & Modified)**
+> 本项目是基于 [yueruyin/robot-unitree-g1](https://github.com/yueruyin/robot-unitree-g1) 进行的兼容性适配与工程优化。
+
+## 🛠️ 我的主要贡献 (My Contributions)
+- **高版本环境全链路适配**：成功将项目移植到 Windows 10 + Python 3.14 + MuJoCo 4.0 环境下运行，解决了 Python 3.14 对 `torch.jit.load` 的兼容性问题。
+- **MuJoCo 4.0 API 兼容性修复**：深入源码排查，修复了因 MuJoCo 4.0 将 `qpos/qvel` 返回值由标量改为数组而导致的 `ValueError: setting an array element with a sequence` 致命崩溃。
+- **跨平台路径与编码重构**：重构了 YAML 配置文件读取逻辑，解决了 Windows 下 GBK/UTF-8 编码冲突；将策略网络路径由易错的绝对路径改为相对路径，确保模型加载的健壮性。
+- **策略网络部署与验证**：成功加载 Torchscript 预训练模型，实现了 53 自由度机器人的站立、下蹲、步态行走及双臂 RRT 路径规划控制的完整闭环。
+
+---
+*(以下是原作者说明)*
+
+
+
+
+
+
 ## 项目概述
 
 本项目是基于宇树科技（Unitree）G1人形机器人的控制系统实现，使用MuJoCo物理引擎进行仿真。该系统支持G1机器人的全身控制，包括双足行走、蹲起、手臂与手指的精确控制等功能。
